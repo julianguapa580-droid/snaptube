@@ -1,0 +1,26 @@
+# Sistema de Avance de Prácticas — almacenamiento interno
+
+## Esta versión NO necesita XAMPP, PHP ni base de datos.
+Guarda los datos en `localStorage` del navegador en el mismo dispositivo.
+
+## Cómo abrirlo
+1. Descarga y descomprime `sistema_practicas_memoria_interna.zip`.
+2. Abre la carpeta.
+3. Haz doble clic en `index.html`; se abrirá en Chrome o Edge.
+4. Usuario inicial: `admin`
+5. Contraseña inicial: `Cambiar123!`
+6. Entra y pulsa **Cambiar contraseña** para poner una contraseña propia.
+
+## Funciones
+- Inicio de sesión local sencillo.
+- Dashboard con porcentaje, actividades, estados y horas.
+- Registro, edición, eliminación y búsqueda de actividades.
+- Datos del practicante, supervisor y periodo.
+- Exportación CSV e impresión/guardado en PDF.
+- Copia de seguridad en JSON y restauración desde una copia.
+- Diseño web con efectos 3D fluidos (Three.js): olas de partículas tridimensionales en la cabecera, fondo ambiental interactivo con movimiento del ratón y tarjetas con perspectiva 3D al interactuar.
+
+## Importante sobre “memoria interna”
+Los datos se guardan en el almacenamiento local del navegador del equipo. No se guardan automáticamente en una carpeta visible de Windows ni se sincronizan con otros equipos. Si borras los datos del sitio, cambias de navegador/perfil o usas modo incógnito, podrías perderlos. Descarga copias de seguridad JSON con regularidad y guárdalas en una carpeta segura.
+
+El inicio de sesión es solo una barrera local sencilla, no una seguridad apropiada para publicar en Internet ni para proteger datos sensibles. No guardes datos personales o confidenciales de ciudadanos. Para uso institucional multiusuario se necesitaría un servidor autorizado y controles de seguridad.

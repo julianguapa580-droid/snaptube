@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sistema de Avance de Prácticas | Municipalidad Provincial</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<style>
+:root{--navy:#15395d;--blue:#1769aa;--bg:#f3f6fb;--line:#e2e8f0;--muted:#667085;--ink:#1d2939;--green:#16845b;--orange:#b97813;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px "Segoe UI",Arial,sans-serif;color:var(--ink)}button,input,select,textarea{font:inherit}button{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer}.primary{background:var(--blue);color:white}.outline{background:white;border:1px solid var(--line);color:var(--navy)}.danger{background:#fff0ef;color:var(--red);border:1px solid #ffd3ce}.hidden{display:none!important}
+header{background:linear-gradient(115deg,#102c4b,#1769aa);color:white;padding:22px clamp(14px,4vw,38px)}.head{max-width:1250px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:13px}.logo{width:48px;height:48px;border-radius:13px;border:1px solid #ffffff8a;display:grid;place-items:center;font-size:23px}.brand h1{font-size:clamp(19px,3vw,27px);margin:0 0 5px}.brand p{margin:0;color:#d6e9fa;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+main{max-width:1250px;margin:24px auto;padding:0 18px 36px}.notice{background:#eaf4fc;border:1px solid #cbe4fa;color:#214f77;padding:12px 14px;border-radius:10px;font-size:12px;line-height:1.55;margin-bottom:18px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:23px 0 13px}.section-head h2{font-size:20px;margin:0}.muted{color:var(--muted);font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.card,.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 3px 10px #173b5d06}.label{font-size:12px;color:var(--muted)}.number{font-size:29px;font-weight:800;color:var(--navy);margin:9px 0}.track{height:9px;background:#e9eff6;border-radius:99px;overflow:hidden;margin:10px 0}.fill{height:100%;background:linear-gradient(90deg,#1769aa,#29a59a);width:0;transition:width .2s}.layout{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}.panel h3{margin:0 0 15px;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.full{grid-column:1/-1}label{font-size:12px;font-weight:700;color:#344054}input,select,textarea{width:100%;padding:10px;border:1px solid #d0d9e4;border-radius:8px;background:white;color:var(--ink);outline:none;font-size:13px}input:focus,select:focus,textarea:focus{border-color:#4295cf;box-shadow:0 0 0 3px #1769aa15}textarea{min-height:76px;resize:vertical}.form-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.profile{display:grid;gap:10px}.profile .field{margin-bottom:2px}.list{display:grid;gap:9px}.recent{background:#f8fafc;border-radius:9px;padding:11px;display:flex;gap:10px}.dot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex:none}.recent strong{font-size:12px;display:block;line-height:1.45}.recent small{display:block;font-size:11px;color:var(--muted);margin-top:4px}.status{display:inline-block;border-radius:99px;padding:5px 8px;font-size:10px;font-weight:800;white-space:nowrap}.done{background:#dcfce7;color:#166534}.progress{background:#e5f2ff;color:#145b94}.pending{background:#fff2d8;color:#8a5800}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.filters input,.filters select{max-width:230px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px;background:white}table{border-collapse:collapse;width:100%;min-width:780px}th,td{padding:12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;font-size:12px}th{background:#f7f9fc;text-transform:uppercase;letter-spacing:.3px;color:#667085;font-size:10px}tr:last-child td{border-bottom:0}.table-actions{display:flex;gap:5px}.table-actions button{font-size:11px;padding:7px 8px}.empty{text-align:center;color:var(--muted);padding:22px}.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:22px}
+#loginScreen{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(130deg,#102c4b,#1769aa)}.login{width:min(100%,400px);padding:30px;background:white;border-radius:17px;box-shadow:0 20px 60px #061a3050}.login .logo{margin:0 auto 16px;background:#1769aa;color:white;width:56px;height:56px}.login h1{text-align:center;font-size:23px;margin:0 0 7px}.login p{text-align:center;color:var(--muted);font-size:12px;line-height:1.6}.login form{display:grid;gap:13px;margin-top:20px}.login label{display:grid;gap:7px}.login .hint{font-size:11px;margin-top:16px}.pill{display:inline-block;background:#e8f2fc;color:#1a5c91;padding:7px 10px;border-radius:99px;font-size:11px;font-weight:700}
+@media(max-width:850px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
+@media(max-width:520px){main{padding:0 10px 25px}.cards{gap:8px}.card,.panel{padding:13px}.number{font-size:24px}.grid{grid-template-columns:1fr}.full{grid-column:auto}.brand{align-items:flex-start}.actions button{padding:9px;font-size:11px}}
+@media print{body{background:white}header{print-color-adjust:exact;-webkit-print-color-adjust:exact}.no-print,.form-panel,.profile-panel,.bg-canvas-3d,#headerCanvas3D{display:none!important}main{margin:10px auto;padding:0}.cards{grid-template-columns:repeat(4,1fr)}.layout{grid-template-columns:1fr 1fr}.card,.panel{box-shadow:none;break-inside:avoid}table{min-width:0}th,td{font-size:9px;padding:7px}.table-wrap{overflow:visible}.table-actions{display:none}}
+
+/* Canvas 3D de fondo y cabecera con ondas y partículas */
+.bg-canvas-3d {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.65;
+}
+
+header {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0b1f36 0%, #153e6b 50%, #1769aa 100%);
+  box-shadow: 0 4px 20px rgba(16, 44, 75, 0.25);
+}
+
+#headerCanvas3D {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+
+.head {
+  position: relative;
+  z-index: 2;
+}
+
+/* Efectos de elevación y perspectiva 3D moderna en tarjetas y paneles */
+.card, .panel {
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.25s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.card:hover {
+  transform: translateY(-4px) rotateX(2deg) rotateY(-2deg) scale(1.015);
+  box-shadow: 0 12px 28px rgba(21, 57, 93, 0.12);
+}
+.panel:hover {
+  box-shadow: 0 10px 24px rgba(21, 57, 93, 0.08);
+}
+
+.badge-3d {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  color: #e0f2fe;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+</style>
+</head>
+<body>
+<section id="loginScreen">
+ <div class="login">
+  <div class="logo">🏛️</div><h1>Sistema de Prácticas</h1><p>Municipalidad Provincial<br>Mesa de partes / Atención al ciudadano</p>
+  <form id="loginForm">
+   <label>Usuario<input id="loginUser" autocomplete="username" required placeholder="Ingresa tu usuario"></label>
+   <label>Contraseña<input id="loginPass" type="password" autocomplete="current-password" required placeholder="Ingresa tu contraseña"></label>
+   <button class="primary" type="submit">Iniciar sesión</button>
+  </form>
+  <p class="hint">Primer uso: usuario <b>admin</b> y contraseña <b>Cambiar123!</b>. Cámbiala en Configuración.</p>
+  <p id="loginError" style="color:#b42318"></p>
+ </div>
+</section>
+<div id="app" class="hidden">
+<canvas id="bgCanvas3D" class="bg-canvas-3d"></canvas>
+<header>
+  <canvas id="headerCanvas3D"></canvas>
+  <div class="head">
+    <div class="brand">
+      <div class="logo">🏛️</div>
+      <div>
+        <h1 style="display:flex;align-items:center;gap:10px;">
+          Sistema de Avance de Prácticas
+          <span class="badge-3d">✨ 3D Dinámico</span>
+        </h1>
+        <p id="headerSubtitle">Municipalidad Provincial · Mesa de partes / Atención al ciudadano</p>
+      </div>
+    </div>
+    <div class="actions no-print">
+      <button class="outline" id="exportBtn">Exportar CSV</button>
+      <button class="outline" id="printBtn">Imprimir / PDF</button>
+      <button class="outline" id="logoutBtn">Cerrar sesión</button>
+    </div>
+  </div>
+</header>
+<main>
+<div class="section-head"><h2>Resumen general</h2><span class="muted" id="today"></span></div>
+<section class="cards">
+<div class="card"><div class="label">Avance completado</div><div class="number" id="percent">0%</div><div class="track"><div class="fill" id="percentBar"></div></div><div class="muted">Terminadas / total</div></div>
+<div class="card"><div class="label">Actividades registradas</div><div class="number" id="total">0</div><div class="muted">Total de tareas</div></div>
+<div class="card"><div class="label">En proceso</div><div class="number" id="inProgress">0</div><div class="muted">Tareas en desarrollo</div></div>
+<div class="card"><div class="label">Horas registradas</div><div class="number" id="hours">0 h</div><div class="muted">Horas declaradas</div></div>
+</section>
+
+<div class="section-head"><h2>Gestión de prácticas</h2><span class="pill" id="userBadge"></span></div>
+<section class="layout">
+<div class="panel form-panel no-print"><h3 id="formHeading">＋ Registrar actividad</h3>
+<form id="activityForm"><input type="hidden" id="editId"><div class="grid">
+<div class="field"><label for="date">Fecha *</label><input type="date" id="date" required></div>
+<div class="field"><label for="area">Área *</label><select id="area" required><option>Mesa de partes / Atención al ciudadano</option><option>Secretaría General</option><option>Archivo</option><option>Administración</option><option>Informática / Sistemas</option><option>Otra área</option></select></div>
+<div class="field full"><label for="title">Actividad *</label><input id="title" maxlength="180" required placeholder="Ej.: Orientación al ciudadano sobre requisitos de trámite"></div>
+<div class="field"><label for="status">Estado</label><select id="status"><option>Pendiente</option><option>En proceso</option><option>Terminado</option></select></div>
+<div class="field"><label for="hoursInput">Horas dedicadas</label><input id="hoursInput" type="number" min="0" max="24" step=".5" value="1"></div>
+<div class="field full"><label for="description">Descripción / resultado</label><textarea id="description" maxlength="1000" placeholder="Describe lo realizado. No incluyas datos personales de ciudadanos."></textarea></div>
+<div class="field full"><label for="evidence">Evidencia o referencia (opcional)</label><input id="evidence" maxlength="180" placeholder="Ej.: Informe semanal o nombre de archivo"></div>
+</div><div class="form-actions"><button class="primary" type="submit" id="saveBtn">Guardar actividad</button><button class="outline hidden" type="button" id="cancelEdit">Cancelar</button></div></form>
+</div>
+<div class="panel profile-panel"><h3>Datos del informe</h3><form id="profileForm" class="profile">
+<div class="field"><label for="municipality">Municipalidad</label><input id="municipality" maxlength="160" value="Municipalidad Provincial"></div>
+<div class="field"><label for="internName">Nombre del practicante</label><input id="internName" maxlength="120" placeholder="Tu nombre"></div>
+<div class="field"><label for="supervisor">Supervisor</label><input id="supervisor" maxlength="120" placeholder="Nombre del supervisor"></div>
+<div class="field"><label for="period">Periodo de prácticas</label><input id="period" maxlength="120" placeholder="Ej.: Octubre - Diciembre 2026"></div>
+<div class="field"><label for="targetHours">Horas objetivo (opcional)</label><input id="targetHours" type="number" min="0" step="1" value="0"></div>
+<button class="primary" type="submit">Guardar datos del informe</button></form>
+<div class="form-actions no-print"><button class="outline" id="backupBtn">Copia de seguridad</button><button class="outline" id="restoreBtn">Restaurar copia</button><input type="file" id="restoreFile" accept=".json,application/json" class="hidden"></div>
+<p class="muted" style="margin-top:10px">La copia JSON permite trasladar tus registros a otro equipo o recuperarlos.</p>
+<div class="form-actions no-print" id="adminTools"><button class="outline" id="changePassBtn">Cambiar contraseña</button></div>
+</div>
+</section>
+<div class="section-head"><h2>Historial de actividades</h2><span class="muted" id="countText"></span></div>
+<div class="filters no-print"><input id="search" placeholder="Buscar actividad o área"><select id="filterStatus"><option value="">Todos los estados</option><option>Pendiente</option><option>En proceso</option><option>Terminado</option></select><button class="outline" id="clearFilters">Limpiar filtros</button></div>
+<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Actividad / resultado</th><th>Área</th><th>Estado</th><th>Horas</th><th>Evidencia</th><th class="no-print">Acciones</th></tr></thead><tbody id="activityRows"></tbody></table></div>
+<div class="section-head"><h2>Actividad reciente</h2></div><div id="recent" class="list"></div>
+<div class="footer">Sistema local de seguimiento de prácticas · Los registros permanecen en este navegador.</div>
+</main>
+</div>
+<script>
+'use strict';
+const DATA_KEY='mp_practicas_data_v1', AUTH_KEY='mp_practicas_auth_v1', PASS_KEY='mp_practicas_pass_v1';
+const $=id=>document.getElementById(id);
+const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const defaultData={profile:{municipality:'Municipalidad Provincial',area:'Mesa de partes / Atención al ciudadano',internName:'',supervisor:'',period:'',targetHours:0},activities:[]};
+let data, editingId=null, sessionUser=null;
+function loadData(){try{const x=JSON.parse(localStorage.getItem(DATA_KEY)||'null');data=x&&x.profile&&Array.isArray(x.activities)?x:structuredClone(defaultData)}catch(e){data=structuredClone(defaultData)}}
+function saveData(){try{localStorage.setItem(DATA_KEY,JSON.stringify(data));render();return true}catch(e){alert('No se pudo guardar. El almacenamiento del navegador puede estar lleno o desactivado. Exporta una copia y libera espacio.');return false}}
+function escapeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function statusClass(s){return s==='Terminado'?'done':s==='En proceso'?'progress':'pending'}
+function login(user,pass){const saved=localStorage.getItem(PASS_KEY)||'Cambiar123!';if(user==='admin'&&pass===saved){sessionUser='admin';sessionStorage.setItem(AUTH_KEY,'admin');$('loginError').textContent='';$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');$('userBadge').textContent='Sesión: administrador';render();return true}return false}
+function logout(){sessionUser=null;sessionStorage.removeItem(AUTH_KEY);$('app').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('loginPass').value=''}
+$('loginForm').addEventListener('submit',e=>{e.preventDefault();if(!login($('loginUser').value.trim(),$('loginPass').value))$('loginError').textContent='Usuario o contraseña incorrectos.'});
+$('logoutBtn').addEventListener('click',logout);
+$('today').textContent=new Date().toLocaleDateString('es-PE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+function render(){
+const list=data.activities,total=list.length,done=list.filter(a=>a.status==='Terminado').length,prog=list.filter(a=>a.status==='En proceso').length,hrs=list.reduce((s,a)=>s+(Number(a.hours)||0),0),pct=total?Math.round(done/total*100):0;
+$('percent').textContent=pct+'%';$('percentBar').style.width=pct+'%';$('total').textContent=total;$('inProgress').textContent=prog;$('hours').textContent=hrs.toFixed(1)+' h';
+const p=data.profile;$('municipality').value=p.municipality||'Municipalidad Provincial';$('internName').value=p.internName||'';$('supervisor').value=p.supervisor||'';$('period').value=p.period||'';$('targetHours').value=p.targetHours||0;$('headerSubtitle').textContent=(p.municipality||'Municipalidad Provincial')+' · Mesa de partes / Atención al ciudadano';
+const q=$('search').value.toLocaleLowerCase('es'),f=$('filterStatus').value;
+const filtered=[...list].filter(a=>(!f||a.status===f)&&`${a.title} ${a.area} ${a.description} ${a.evidence}`.toLocaleLowerCase('es').includes(q)).sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+$('countText').textContent=`${filtered.length} de ${total} registros`;
+$('activityRows').innerHTML=filtered.length?filtered.map(a=>`<tr><td>${escapeHTML(a.date)}</td><td><strong>${escapeHTML(a.title)}</strong>${a.description?`<div class="muted" style="margin-top:5px">${escapeHTML(a.description)}</div>`:''}</td><td>${escapeHTML(a.area)}</td><td><span class="status ${statusClass(a.status)}">${escapeHTML(a.status)}</span></td><td>${Number(a.hours).toFixed(1)} h</td><td>${escapeHTML(a.evidence||'—')}</td><td class="no-print"><div class="table-actions"><button class="outline" onclick="editActivity('${a.id}')">Editar</button><button class="danger" onclick="deleteActivity('${a.id}')">Eliminar</button></div></td></tr>`).join(''):'<tr><td colspan="7" class="empty">Todavía no hay actividades que mostrar.</td></tr>';
+const recent=[...list].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).slice(0,5);
+$('recent').innerHTML=recent.length?recent.map(a=>`<div class="recent"><span class="dot" style="background:${a.status==='Terminado'?'#16845b':a.status==='En proceso'?'#1769aa':'#b97813'}"></span><div><strong>${escapeHTML(a.title)}</strong><small>${escapeHTML(a.date)} · ${escapeHTML(a.area)} · ${a.hours} h</small><small><span class="status ${statusClass(a.status)}">${escapeHTML(a.status)}</span></small></div></div>`).join(''):'<div class="empty">Registra una actividad para mostrar el avance.</div>';
+}
+$('activityForm').addEventListener('submit',e=>{e.preventDefault();const title=$('title').value.trim(),hours=Number($('hoursInput').value||0);if(!title){alert('Escribe la actividad.');return}if(hours<0||hours>24){alert('Las horas deben estar entre 0 y 24.');return}
+const a={id:editingId||Date.now(),date:$('date').value,area:$('area').value,title,status:$('status').value,hours,description:$('description').value.trim(),evidence:$('evidence').value.trim()};
+if(editingId)data.activities=data.activities.map(x=>String(x.id)===String(editingId)?a:x);else data.activities.push(a);
+if(saveData())resetForm();
+});
+function resetForm(){editingId=null;$('activityForm').reset();$('date').value=todayISO();$('hoursInput').value='1';$('formHeading').textContent='＋ Registrar actividad';$('saveBtn').textContent='Guardar actividad';$('cancelEdit').classList.add('hidden')}
+window.editActivity=id=>{const a=data.activities.find(x=>String(x.id)===String(id));if(!a)return;editingId=a.id;$('date').value=a.date;$('area').value=a.area;$('title').value=a.title;$('status').value=a.status;$('hoursInput').value=a.hours;$('description').value=a.description||'';$('evidence').value=a.evidence||'';$('formHeading').textContent='Editar actividad';$('saveBtn').textContent='Guardar cambios';$('cancelEdit').classList.remove('hidden');$('activityForm').scrollIntoView({behavior:'smooth',block:'center'})};
+window.deleteActivity=id=>{const a=data.activities.find(x=>String(x.id)===String(id));if(a&&confirm('¿Eliminar la actividad “'+a.title+'”?')){data.activities=data.activities.filter(x=>String(x.id)!==String(id));saveData();if(String(editingId)===String(id))resetForm()}};
+$('cancelEdit').addEventListener('click',resetForm);
+$('profileForm').addEventListener('submit',e=>{e.preventDefault();data.profile={...data.profile,municipality:$('municipality').value.trim()||'Municipalidad Provincial',internName:$('internName').value.trim(),supervisor:$('supervisor').value.trim(),period:$('period').value.trim(),targetHours:Number($('targetHours').value)||0};if(saveData())alert('Datos del informe guardados en este dispositivo.')});
+$('search').addEventListener('input',render);$('filterStatus').addEventListener('change',render);$('clearFilters').addEventListener('click',()=>{$('search').value='';$('filterStatus').value='';render()});
+$('printBtn').addEventListener('click',()=>window.print());
+$('exportBtn').addEventListener('click',()=>{const rows=[['Fecha','Actividad','Área','Estado','Horas','Descripción','Evidencia'],...data.activities.map(a=>[a.date,a.title,a.area,a.status,a.hours,a.description,a.evidence])];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');downloadFile('\ufeff'+csv,'avance_practicas_municipalidad.csv','text/csv;charset=utf-8;')});
+function downloadFile(content,name,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('backupBtn').addEventListener('click',()=>downloadFile(JSON.stringify({version:1,exportedAt:new Date().toISOString(),data},null,2),'copia_practicas_municipalidad.json','application/json'));
+$('restoreBtn').addEventListener('click',()=>$('restoreFile').click());
+$('restoreFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{const obj=JSON.parse(await file.text()),incoming=obj.data||obj;if(!incoming.profile||!Array.isArray(incoming.activities))throw Error('Formato incorrecto');if(confirm('Restaurar reemplazará los datos actuales. ¿Continuar?')){data=incoming;saveData();resetForm();alert('Copia restaurada.')} }catch(err){alert('No se pudo restaurar. Selecciona una copia JSON válida.')}e.target.value=''});
+$('changePassBtn').addEventListener('click',()=>{const old=prompt('Escribe la contraseña actual:');if(old===null)return;const saved=localStorage.getItem(PASS_KEY)||'Cambiar123!';if(old!==saved){alert('La contraseña actual no coincide.');return}const next=prompt('Nueva contraseña (mínimo 10 caracteres):');if(next===null)return;if(next.length<10){alert('Usa al menos 10 caracteres.');return}const again=prompt('Repite la nueva contraseña:');if(next!==again){alert('Las contraseñas no coinciden.');return}localStorage.setItem(PASS_KEY,next);alert('Contraseña cambiada en este navegador.')});
+// --- EFECTOS 3D DE LA PÁGINA (Three.js Header & Background) ---
+let headerScene, headerCamera, headerRenderer, headerParticles;
+let bgScene, bgCamera, bgRenderer, bgPoints;
+let mouseX = 0, mouseY = 0;
+
+function initPage3D() {
+  const headerCanvas = $('headerCanvas3D');
+  const bgCanvas = $('bgCanvas3D');
+  if (!window.THREE) return;
+
+  // 1. Cabecera 3D: Malla de ondas tridimensionales y partículas brillantes
+  if (headerCanvas && !headerRenderer) {
+    const headerEl = headerCanvas.parentElement;
+    const w = headerEl.clientWidth || window.innerWidth;
+    const h = headerEl.clientHeight || 120;
+
+    headerScene = new THREE.Scene();
+    headerCamera = new THREE.PerspectiveCamera(60, w / h, 1, 1000);
+    headerCamera.position.set(0, 80, 200);
+    headerCamera.lookAt(0, 0, 0);
+
+    headerRenderer = new THREE.WebGLRenderer({ canvas: headerCanvas, alpha: true, antialias: true });
+    headerRenderer.setSize(w, h);
+    headerRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Partículas y onda en cabecera
+    const pCount = 1400;
+    const geom = new THREE.BufferGeometry();
+    const positions = new Float32Array(pCount * 3);
+    const originalPositions = new Float32Array(pCount * 3);
+
+    let idx = 0;
+    const cols = 70;
+    const rows = 20;
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        const x = (i - cols / 2) * 14;
+        const z = (j - rows / 2) * 12;
+        const y = Math.sin(i * 0.3) * 15;
+        positions[idx * 3] = x;
+        positions[idx * 3 + 1] = y;
+        positions[idx * 3 + 2] = z;
+        originalPositions[idx * 3] = x;
+        originalPositions[idx * 3 + 1] = y;
+        originalPositions[idx * 3 + 2] = z;
+        idx++;
+      }
+    }
+
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const mat = new THREE.PointsMaterial({
+      color: 0x67e8f9,
+      size: 3.2,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending
+    });
+    headerParticles = new THREE.Points(geom, mat);
+    headerScene.add(headerParticles);
+    headerParticles.userData = { originalPositions: originalPositions };
+  }
+
+  // 2. Fondo 3D: Constelación / malla ambiental sutil y elegante
+  if (bgCanvas && !bgRenderer) {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    bgScene = new THREE.Scene();
+    bgCamera = new THREE.PerspectiveCamera(55, w / h, 1, 2000);
+    bgCamera.position.z = 600;
+
+    bgRenderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: true });
+    bgRenderer.setSize(w, h);
+    bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const starCount = 350;
+    const starGeom = new THREE.BufferGeometry();
+    const starPos = new Float32Array(starCount * 3);
+
+    for (let i = 0; i < starCount * 3; i += 3) {
+      starPos[i] = (Math.random() - 0.5) * 1200;
+      starPos[i + 1] = (Math.random() - 0.5) * 1000;
+      starPos[i + 2] = (Math.random() - 0.5) * 800;
+    }
+
+    starGeom.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    const starMat = new THREE.PointsMaterial({
+      color: 0x38bdf8,
+      size: 2.8,
+      transparent: true,
+      opacity: 0.4
+    });
+    bgPoints = new THREE.Points(starGeom, starMat);
+    bgScene.add(bgPoints);
+  }
+
+  // Mouse move listener para profundidad 3D interactiva
+  window.addEventListener('mousemove', e => {
+    mouseX = (e.clientX - window.innerWidth / 2) * 0.05;
+    mouseY = (e.clientY - window.innerHeight / 2) * 0.05;
+  });
+
+  window.addEventListener('resize', () => {
+    if (headerCanvas && headerRenderer && headerCamera) {
+      const headerEl = headerCanvas.parentElement;
+      const w = headerEl.clientWidth;
+      const h = headerEl.clientHeight;
+      headerCamera.aspect = w / h;
+      headerCamera.updateProjectionMatrix();
+      headerRenderer.setSize(w, h);
+    }
+    if (bgCanvas && bgRenderer && bgCamera) {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      bgCamera.aspect = w / h;
+      bgCamera.updateProjectionMatrix();
+      bgRenderer.setSize(w, h);
+    }
+  });
+
+  let clock = 0;
+  function animate3D() {
+    requestAnimationFrame(animate3D);
+    clock += 0.025;
+
+    // Animación de onda tridimensional en el header
+    if (headerParticles && headerCamera && headerRenderer) {
+      const positions = headerParticles.geometry.attributes.position.array;
+      const originals = headerParticles.userData.originalPositions;
+      for (let i = 0; i < positions.length; i += 3) {
+        const x = originals[i];
+        const z = originals[i + 2];
+        positions[i + 1] = originals[i + 1] + Math.sin(clock + x * 0.03 + z * 0.04) * 8 + Math.cos(clock * 0.8 + z * 0.05) * 6;
+      }
+      headerParticles.geometry.attributes.position.needsUpdate = true;
+      headerParticles.rotation.y = clock * 0.08 + (mouseX * 0.002);
+      headerParticles.rotation.x = Math.sin(clock * 0.05) * 0.05 + (mouseY * 0.002);
+      headerRenderer.render(headerScene, headerCamera);
+    }
+
+    // Animación ambiental de fondo
+    if (bgPoints && bgCamera && bgRenderer) {
+      bgPoints.rotation.y = clock * 0.03 + (mouseX * 0.001);
+      bgPoints.rotation.x = clock * 0.015 + (mouseY * 0.001);
+      bgRenderer.render(bgScene, bgCamera);
+    }
+  }
+  animate3D();
+}
+
+// Iniciar aplicación
+loadData();
+$('date').value = todayISO();
+
+if (sessionStorage.getItem(AUTH_KEY) === 'admin') {
+  sessionUser = 'admin';
+  $('loginScreen').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  render();
+  setTimeout(initPage3D, 50);
+}
+
+// Inicializar 3D al iniciar sesión
+const origLogin = login;
+login = function(user, pass) {
+  const res = origLogin(user, pass);
+  if (res) {
+    setTimeout(initPage3D, 50);
+  }
+  return res;
+};
+</script>
+</body>
+</html>
